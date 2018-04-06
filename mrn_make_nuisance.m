@@ -19,8 +19,8 @@ if ~exist(dout,'dir'), mkdir(dout); end
 
 S=sess_im;M=motion_file;
 % load canlab respos - necessary?
-% addpath(genpath('/work/ics/data/projects/wagerlab/Repository'));
-% addpath(genpath('spm8')) % addpath to spm?
+addpath(genpath('/work/ics/data/projects/wagerlab/Repository'));
+addpath(genpath('spm8')) % addpath to spm?
 
 [g,spikes,gtrim,nuisance_covs,snr]=scn_session_spike_id(S);
 %suppress figures but save them?
