@@ -2,7 +2,8 @@
 
 # This script will pull your data from the MRN auto processing pipeline and put it into the appropriate
 # file structure for analysis with canlab tools.
-# You can run this from anywhere, just make sure you have permissions: chmod 775 ./mrn_to_canlabv2.sh
+# You can run this from anywhere, just make sure you have permissions: chmod 775 ./mrn_to_canlab_v2.sh
+# Run by entering: bash ./mrn_to_canlab_v2.sh
 # You need to give it your study-specific wildcards for folder names.
 # Edit below 	MRNSTUDYID 	for how to find your study in the MRN directory
 #							this will be for the name of your study folder under twager/
@@ -18,8 +19,8 @@
 #	mrn_qual_check.m
 #	mrn_make_noise_model.m
 #
-# This script runs spike detection on the distortion corrected functional scans.
-# This script includes (and therefore replaces) make_noise_model.m 
+# NOT TRUE IN THE VERSION - This script runs spike detection on the distortion corrected functional scans.
+# NOT TRUE IN THE VERSION - This script includes (and therefore replaces) make_noise_model.m 
 # This script also creates a 3Dprint folder with your subjects ready to be printed cortex
 # This script sould run disdaqs for as specified number of images
 # This script removes the first timepoint (the SBref) from the preprocesses functional images and 
@@ -124,7 +125,6 @@ for mrn_file in ${basedir}/M*; do
 	cd $mrn_file
 
 	# copy functional: preprocessed and raw
-$mrn_file
 	# for now
 	# /work/ics/data/projects/wagerlab/labdata/data/IAPS_Searchlight/MRN/M80309514/Study20141008at105815/IAPS_pa__32ch_mb8_v01_r01_0005
 	# /work/ics/data/projects/wagerlab/labdata/data/IAPS_Searchlight/MRN/M80309514/Study20141008at105815/IAPS_pa_32ch_mb8_v01_r02_0007
@@ -191,7 +191,6 @@ $mrn_file
 		# perform data quality checks and create the nuisance covariates
 		# using Tor's scn_session_spike_id
 		# run in matlab
-		echo "attempting scn_session_spike_id on distortion corrected data in matlab..."
 		cd ${newdir}/${subid}/Functional/Preprocessed/${runame}
 		save_dir="${newdir}/${subid}/Functional/Preprocessed/${runame}"
 
@@ -208,18 +207,21 @@ $mrn_file
 			3dTcat -prefix d${funcid}_no_SBref.nii d*.nii'[1..$]'
 			echo "distortion SBref removed..."
 			distort_im="d${funcid}_no_SBref.nii"
-			echo "running spike id..."
-			echo "We're about to go into MATLAB, hold onto your butts"
-			# the point is to make this Nuisance_covariates_R.mat which contains R{1} and R{2} where
-			# R{1} spikeids R{2} 24 motion regs
-			# may have to addpath to the repos addpath(genpath('/work/ics/data/projects/wagerlab/Repository'))
-			matlab -nodisplay -nojvm -noFigureWindows -r "addpath('/work/ics/data/projects/wagerlab/labdata/data/IAPS_Searchlight/code/');mrn_make_nuisance('$distort_im','$motion_file','$save_dir'); exit;"
-			# must store in noise_model_1.mat
-			# IT WILL OUTPUT Nuisance_covariates.mat but this will be for each run instead of cells per run
-			# instead of running make noise model, this skips that and creates the proper noise modeling file for you
-			# noise_model_1.mat
-			# for testing: matlab -r 'try myfunction(argument1,argument2); catch; end; quit'
-			echo "Matlab is done... for this sub"
+
+			# # REMOVE MATLAB FOR NOW - NOT WORKING BECAUSE OF A DISPLAY ISSUE IN SCN_SPIKE_ID
+			# echo "running spike id..."
+			# echo "We're about to go into MATLAB, hold onto your butts"
+			# # the point is to make this Nuisance_covariates_R.mat which contains R{1} and R{2} where
+			# # R{1} spikeids R{2} 24 motion regs
+			# # may have to addpath to the repos addpath(genpath('/work/ics/data/projects/wagerlab/Repository'))
+			# matlab -nodisplay -nojvm -noFigureWindows -r "addpath('/work/ics/data/projects/wagerlab/labdata/data/IAPS_Searchlight/code/');mrn_make_nuisance('$distort_im','$motion_file','$save_dir'); exit;"
+			# # must store in noise_model_1.mat
+			# # IT WILL OUTPUT Nuisance_covariates.mat but this will be for each run instead of cells per run
+			# # instead of running make noise model, this skips that and creates the proper noise modeling file for you
+			# # noise_model_1.mat
+			# # for testing: matlab -r 'try myfunction(argument1,argument2); catch; end; quit'
+			# echo "Matlab is done... for this sub"
+			echo "$mrn_file complete"
 		else
 			echo "WARNING: No distortion corrected functional images exist for ${subid} run ${runame}... nuisance covariates not made" >> ${err_log_dir}/mrn_log_${subid}
 		fi
