@@ -5,9 +5,9 @@ function [R dat_qual]=mrn_make_nuisance(sess_im,motion_file,save_dir)
 %       give this function
 %   sess_im   the session images you want to run spike id on
 %   motion    the 6 motion regressor text file
-%   designed to run in bash with the mrn_to_canlab script marianne put together
+%   designed to run in bash with the mrn_to_canlab_v2 or run_make_noisemodel script by marianne
 %   designed to run on preprocessed multiband data with mrn pipeline
-%   by marianne 2015
+%   by marianne 2015, updated 2018
 
 % move to the canlab subject folder appropriate place
 curr_dir=pwd;
@@ -31,7 +31,7 @@ R{1}=[zeros(1,size(nuisance_covs,2)); nuisance_covs];
 % % remove duplicate spikes
 spikes=R{1};
 uniquespikes = diag(any(spikes,2));
-uniquespikes = uniquespikes(:,any(uniquespikes)); %didnt work
+uniquespikes = uniquespikes(:,any(uniquespikes));
         
 % save other data qual info somewhere
 dat_qual.g=g;

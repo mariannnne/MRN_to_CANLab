@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # To submit jobs to blanca
+# for more than 24 hours use this notation: 1-00:00:00 (e.g. 1 day)
 
 #SBATCH --job-name matlab_job
 #SBATCH --time 8:00:00
